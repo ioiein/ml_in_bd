@@ -1,0 +1,21 @@
+1) hdfs dfs -mkdir /new_fold
+2) hdfs dfs -mkdir /new_fold/new_subfold
+3) Trash это корзина, в которую файлы попадают при удалении, через некоторое время файлы из корзины удаляются совсем.
+   Миновать корзину можно hdfs dfs -rm -skipTrash <FILE>
+4) hdfs dfs -touchz /new_fold/new_subfold/new_file
+5) hdfs dfs -rm /new_fold/new_subfold/new_file
+6) hdfs dfs -rm -r /new_fold
+
+1) hdfs dfs -mkdir /folder
+   hdfs dfs -put file /folder
+2) hdfs dfs -cat /folder/file
+3) hdfs dfs -tail /folder/file
+4) hdfs dfs -head /folder/file
+5) hdfs dfs -mkdir /new_folder
+   hdfs dfs -cp /folder/file /new_folder/file
+
+1) hdfs dfs -setrep -w 2 /new_folder/file
+   я попробовал для файла датасета цен на airbnb из 3го пункта. Уменьшал с 3 до 2 и обратно. И с 3 до 1 и обратно.
+   с 3 до 2 и с 2 до 3 заняло примерно одинокавое время. А вот с 3 до 1 было в примерно в два раза дольше чем с 1 до 3.
+2) hdfs fsck /new_folder -files -blocks -locations
+3) hdfs fsck -blockId blk_1073741954

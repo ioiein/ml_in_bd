@@ -1,0 +1,16 @@
+Результаты такого скрипта: 
+
+import numpy as np
+import pandas as pd
+data = pd.read_csv('/kaggle/input/new-york-city-airbnb-open-data/AB_NYC_2019.csv')
+print(np.array(data.price).mean())
+print(np.array(data.price).var())
+
+152.7206871868289
+57672.84569843359
+
+Результаты map-reduce:
+153.23297422544968
+59124.12509381504
+
+Есть небольшая разница в результатах по причине того, что в своей программе я учитываю не все значения, т.к. не все строки csv файла получается корректно разобрать.
