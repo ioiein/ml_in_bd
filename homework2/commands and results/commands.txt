@@ -1,0 +1,30 @@
+1)
+SELECT artist_lastfm, scrobbles_lastfm FROM hue__tmp_artists
+ORDER BY scrobbles_lastfm DESC LIMIT 1;
+
+2) Самый популярный тег - у меня были сомнения, что значит популярный, поэтому сделал 2 варианта, хоть результат один и тот же:
+самый часто встречающийся тег среди артистов:
+SELECT count(*) as cc, art_tags.tag from
+(SELECT artist_lastfm, tag FROM `default`.`hue__tmp_artists` LATERAL VIEW explode(split(tags_lastfm, '; ')) adTable AS tag) as art_tags
+where art_tags.tag != ''
+GROUP BY art_tags.tag
+ORDER BY cc DESC LIMIT 1;
+
+самый прослушивемый тег:
+SELECT sum(listeners) as cc, art_tags.tag from
+(SELECT artist_lastfm, tag, listeners_lastfm as listeners FROM `default`.`hue__tmp_artists` LATERAL VIEW explode(split(tags_lastfm, '; ')) adTable AS tag) as art_tags
+where art_tags.tag != ''
+GROUP BY art_tags.tag
+ORDER BY cc DESC LIMIT 1;
+
+3) Для каждого из 10 самых популярных тега самый популярный(прослушиваемый) исполнитель.
+SELECT count(*) as cc, art_tags.tag, max(struct(art_tags.listeners_lastfm, art_tags.artist_lastfm)).col1 as listeners, max(struct(art_tags.listeners_lastfm, art_tags.artist_lastfm)).col2 as atrist from
+(SELECT artist_lastfm, tag, listeners_lastfm FROM `default`.`hue__tmp_artists` LATERAL VIEW explode(split(tags_lastfm, '; ')) adTable AS tag) as art_tags
+where art_tags.tag != ''
+GROUP BY art_tags.tag
+ORDER BY cc DESC LIMIT 10;
+ 
+4) Для каждой страны самый популярный исполнитель. Простой запрос, но к сожалению более интересный инсайт меня не посетил(
+SELECT country_mb, max(struct(listeners_lastfm, artist_lastfm)).col2 as artist, max(struct(listeners_lastfm, artist_lastfm)).col1 as listeners FROM hue__tmp_artists
+WHERE listeners_lastfm > 5
+GROUP BY country_mb;
